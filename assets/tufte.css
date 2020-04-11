@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /**
-File taken from https://github.com/edwardtufte/tufte-css
+Based on https://github.com/edwardtufte/tufte-css
 
 License:
 The MIT License (MIT)
@@ -173,11 +173,11 @@ div.epigraph > blockquote > p {
     font-style: italic;
 }
 
-div.epigraph > blockquote > footer {
+div.epigraph > blockquote > .footer {
     font-style: normal;
 }
 
-div.epigraph > blockquote > footer > cite {
+div.epigraph > blockquote > .footer > cite {
     font-style: italic;
 }
 /* end chapter epigraphs styles */
@@ -191,14 +191,14 @@ blockquote p {
     margin-right: 40px;
 }
 
-blockquote footer {
+blockquote .footer {
     width: 55%;
     font-size: 1.1rem;
     text-align: right;
 }
 
 section > p,
-section > footer,
+section > .footer,
 section > table {
     width: 55%;
 }
@@ -422,7 +422,7 @@ label.margin-toggle:not(.sidenote-number) {
 
     hr,
     section > p,
-    section > footer,
+    section > .footer,
     section > table {
         width: 100%;
     }
@@ -455,7 +455,7 @@ label.margin-toggle:not(.sidenote-number) {
     }
 
     blockquote p,
-    blockquote footer {
+    blockquote .footer {
         width: 100%;
     }
 
