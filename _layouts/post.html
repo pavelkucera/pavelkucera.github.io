@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include meta.html %}
+    <title>{{ page.title }} | {{ site.title }}</title>
+
+    <meta property="og:title" content="{{ page.title }} | {{ site.title }}">
+    <meta property="og:type" content="article">
+    <meta property="og:article:author" content="{{ site.author }}">
+    <meta property="og:article:published_time" content="{{ page.date | date: "%Y-%m-%d" }}">
+    {% for tag in page.tags %}
+    <meta property="og:article:tag" content="{{ tag }}">
+    {% endfor %}
+</head>
+<body>
+<article> <section>
+    {{ content }}
+</section> </article>
+</body>
+</html>
