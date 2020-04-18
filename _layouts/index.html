@@ -15,11 +15,28 @@
     {{ content }}
     </section>
 
+    {% assign talks = site.posts | where_exp: "item", "item.tags contains 'talk'" %}
+    {% if talks.size > 0 %}
+    <section>
+        <h2>Talks</h2>
+
+        <ul>
+            {% for post in talks %}
+            <li>
+                {{ post.date | date: "%Y-%m-%d" }}
+                <a href="{{ post.url }}">{{ post.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {% assign blogPosts = site.posts | where_exp: "item", "item.tags contains 'blog'" %}
     <section>
         <h2>Blog</h2>
 
         <ul>
-            {% for post in site.posts %}
+            {% for post in blogPosts %}
             <li>
                 {{ post.date | date: "%Y-%m-%d" }}
                 <a href="{{ post.url }}">{{ post.title }}</a>

@@ -1,6 +1,7 @@
 ---
 title: Counting Branch Mispredictions on macOS
 layout: post
+tags: [blog]
 ---
 {::options parse_block_html="true" /}
 
