@@ -41,7 +41,7 @@ const processArticle = async (article: Article): Promise<void> => {
 }
 ```
 
-The defined schema has two issues<label for="sn-parse-validate" class="margin-toggle sidenote-number"></label>
+The defined schema has two issues<label for="sn-large-codebase" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="sn-large-codebase" class="margin-toggle"/>
 <span class="sidenote" id="sn-large-codebase">It is easy to spot issues in an example of this size, but not necessarily in a codebase of larger size. Especially if validations are defined in a different place than the type.</span>:
 
