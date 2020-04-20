@@ -2,9 +2,7 @@ import {
   ArraySchema,
   BooleanSchema,
   NumberSchema,
-  ObjectSchema,
   StringSchema,
-  Schema,
   SymbolSchema,
 } from '@hapi/joi'
 import * as joi from '@hapi/joi'
