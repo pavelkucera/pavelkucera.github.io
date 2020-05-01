@@ -142,7 +142,7 @@ type PropertySchema<PropertyType> =
   never
 
 type ValidationSchema<T extends Record<string, any>> = {
-  [PropertyName in keyof T]: PropertySchema<T[PropertyName]>
+  [PropertyName in keyof T]-?: PropertySchema<T[PropertyName]>
 }
 ```
 
