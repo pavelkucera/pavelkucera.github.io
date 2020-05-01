@@ -6,15 +6,20 @@ tags: [blog, typescript, conditional types, mapped types, validation]
 
 # {{ page.title }}
 
-In this post I will demonstrate how to use TypeScript's [mapped](https://www.typescriptlang.org/docs/handbook/advanced-types.html) and [conditional](https://www.typescriptlang.org/docs/handbook/advanced-types.html) types to enforce defining [@hapi/joi](https://hapi.dev/module/joi/) validations corresponding to TypeScript's types.
+In this post I will demonstrate how to use TypeScript's [mapped](https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types) and [conditional](https://www.typescriptlang.org/docs/handbook/advanced-types.html#conditional-types) types to enforce defining [@hapi/joi](https://hapi.dev/module/joi/) validations corresponding to TypeScript's types.
 
-This post demonstrates how to apply mapped and conditional types in practise, but not necessarily the best way to define validations.
 I gave a [talk]({% post_url 2019-11-21-typescript-mapped-and-conditional-types-copenhagenjs %}) on the same topic.
 Check it out if you prefer consuming information as video/audio over text.
+This post demonstrates how to apply mapped and conditional types in practise, but not necessarily the best way to define validations.
+
+The code examples assume TypeScript of `3.8` (but the functionality is, with minor changes, available since TypeScript 2.8) and `@hapi/joi` of version `16.1`.
 
 ## The Problem
 
 TypeScript does not give any runtime type guarantees, and thus it can easily happen for a runtime value to differ from the type we specified for it.
+This typically happens when we work with data we do not own.
+For example, JSON input to a REST API can come in any form, independent of the type we define for it. 
+
 One way to bridge this gap is to validate inputs<label for="sn-parse-validate" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="sn-parse-validate" class="margin-toggle"/>
 <span class="sidenote" id="sn-parse-validate">On this topic, check out Alexis King's blogpost [Parse, don't validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/).</span>
@@ -91,7 +96,11 @@ As such, we can define a mapped type `ValidationSchema1<T>` which maps over the 
 - makes all properties required (so we don't forget to specify properties optional in `T`)
 - requires each property to be a validation (of type `Schema` from `@hapi/joi`)
 
-Lo and behold:
+Lo and behold<label for="sn-mapped-types-syntax" class="margin-toggle sidenote-number"></label>:
+
+<input type="checkbox" id="sn-mapped-types-syntax" class="margin-toggle"/>
+<span class="sidenote" id="sn-mapped-types-syntax">If you are confused about what the `-?` syntax means, take a look at the [release notes of TypeScript 2.8](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#improved-control-over-mapped-type-modifiers) which explain the modifier.
+Thanks to my colleague [Morten Andersen](https://www.linkedin.com/in/morten-andersen-cph/) for pointing this out.</span>
 
 ```typescript
 import { Schema } from '@hapi/joi'
@@ -100,6 +109,9 @@ type ValidationSchema1<T> = {
   [PropertyName in keyof T]-?: Schema
 }
 ```
+
+Note that the mapping between properties of `ValidationSchema1<T>` and `T` is bidirectional.
+`ValidationSchema1<T>` will require you to define all properties of `T` and will not allow you to define any extra properties.
 
 Using this type prevents us from omitting a validation, but does not ensure that we define a validation of correct type.
 For that we have to use conditional types.
@@ -142,7 +154,7 @@ type PropertySchema<PropertyType> =
   never
 
 type ValidationSchema<T extends Record<string, any>> = {
-  [PropertyName in keyof T]: PropertySchema<T[PropertyName]>
+  [PropertyName in keyof T]-?: PropertySchema<T[PropertyName]>
 }
 ```
 
