@@ -8,9 +8,9 @@ tags: [blog, typescript, conditional types, mapped types, validation]
 
 In this post I will demonstrate how to use TypeScript's [mapped](https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types) and [conditional](https://www.typescriptlang.org/docs/handbook/advanced-types.html#conditional-types) types to enforce defining [@hapi/joi](https://hapi.dev/module/joi/) validations corresponding to TypeScript's types.
 
-This post demonstrates how to apply mapped and conditional types in practise, but not necessarily the best way to define validations.
 I gave a [talk]({% post_url 2019-11-21-typescript-mapped-and-conditional-types-copenhagenjs %}) on the same topic.
 Check it out if you prefer consuming information as video/audio over text.
+This post demonstrates how to apply mapped and conditional types in practise, but not necessarily the best way to define validations.
 
 The code examples assume TypeScript of `3.8` and `@hapi/joi` of version `16.1`.
 
