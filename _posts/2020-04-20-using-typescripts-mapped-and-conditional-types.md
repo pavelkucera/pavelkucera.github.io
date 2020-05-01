@@ -17,6 +17,9 @@ The code examples assume TypeScript of `3.8` (but the functionality is, with min
 ## The Problem
 
 TypeScript does not give any runtime type guarantees, and thus it can easily happen for a runtime value to differ from the type we specified for it.
+This typically happens when we work with data we do not own.
+For example, JSON input to a REST API can come in any form, independent of the type we define for it. 
+
 One way to bridge this gap is to validate inputs<label for="sn-parse-validate" class="margin-toggle sidenote-number"></label>
 <input type="checkbox" id="sn-parse-validate" class="margin-toggle"/>
 <span class="sidenote" id="sn-parse-validate">On this topic, check out Alexis King's blogpost [Parse, don't validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/).</span>
