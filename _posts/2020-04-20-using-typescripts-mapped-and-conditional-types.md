@@ -12,6 +12,8 @@ This post demonstrates how to apply mapped and conditional types in practise, bu
 I gave a [talk]({% post_url 2019-11-21-typescript-mapped-and-conditional-types-copenhagenjs %}) on the same topic.
 Check it out if you prefer consuming information as video/audio over text.
 
+The code examples assume TypeScript of `3.8` and `@hapi/joi` of version `16.1`.
+
 ## The Problem
 
 TypeScript does not give any runtime type guarantees, and thus it can easily happen for a runtime value to differ from the type we specified for it.
