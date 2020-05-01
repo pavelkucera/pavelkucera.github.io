@@ -93,7 +93,11 @@ As such, we can define a mapped type `ValidationSchema1<T>` which maps over the 
 - makes all properties required (so we don't forget to specify properties optional in `T`)
 - requires each property to be a validation (of type `Schema` from `@hapi/joi`)
 
-Lo and behold:
+Lo and behold<label for="sn-mapped-types-syntax" class="margin-toggle sidenote-number"></label>:
+
+<input type="checkbox" id="sn-mapped-types-syntax" class="margin-toggle"/>
+<span class="sidenote" id="sn-mapped-types-syntax">If you are confused about what the `-?` syntax means, take a look at the [release notes of TypeScript 2.8](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#improved-control-over-mapped-type-modifiers) which explain the modifier.
+Thanks to my colleague [Morten Andersen](https://www.linkedin.com/in/morten-andersen-cph/) for pointing this out.</span>
 
 ```typescript
 import { Schema } from '@hapi/joi'
