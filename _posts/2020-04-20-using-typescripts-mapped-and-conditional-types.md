@@ -107,6 +107,9 @@ type ValidationSchema1<T> = {
 }
 ```
 
+Note that the mapping between properties of `ValidationSchema1<T>` and `T` is bidirectional.
+`ValidationSchema1<T>` will require you to define all properties of `T` and will not allow you to define any extra properties.
+
 Using this type prevents us from omitting a validation, but does not ensure that we define a validation of correct type.
 For that we have to use conditional types.
 
