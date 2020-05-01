@@ -12,7 +12,7 @@ I gave a [talk]({% post_url 2019-11-21-typescript-mapped-and-conditional-types-c
 Check it out if you prefer consuming information as video/audio over text.
 This post demonstrates how to apply mapped and conditional types in practise, but not necessarily the best way to define validations.
 
-The code examples assume TypeScript of `3.8` and `@hapi/joi` of version `16.1`.
+The code examples assume TypeScript of `3.8` (but the functionality is, with minor changes, available since TypeScript 2.8) and `@hapi/joi` of version `16.1`.
 
 ## The Problem
 
