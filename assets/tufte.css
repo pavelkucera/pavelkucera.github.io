@@ -493,3 +493,11 @@ label.margin-toggle:not(.sidenote-number) {
         width: 100%;
     }
 }
+
+.time {
+    font-style: italic;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: block;
+    line-height: 1;
+}
