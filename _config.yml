@@ -2,3 +2,11 @@ author: Pavel Kucera
 title: Pavel Kucera
 url: https://pavelkucera.dev
 baseurl: /
+
+repository: pavelkucera/pavelkucera.github.io
+plugins:
+  - jekyll-github-metadata
+  - jekyll-mentions
+  - jekyll-redirect-from
+  - jekyll-sitemap
+  - jemoji
