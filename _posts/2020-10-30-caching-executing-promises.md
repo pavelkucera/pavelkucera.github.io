@@ -106,6 +106,7 @@ const cacheExpensiveOperation = async () => {
 
   expensiveOperationPromise = expensiveOperation() // no await here
   expensiveOperationResult = await expensiveOperationPromise
+  expensiveOperationPromise = null
   return expensiveOperationResult 
 }
 ```
