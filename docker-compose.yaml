@@ -7,3 +7,4 @@ services:
     volumes:
     - ./:/usr/src/app:delegated,ro
     tty: true
+    command: jekyll serve -d /_site --watch --force_polling -H 0.0.0.0 -P 4000 --drafts
