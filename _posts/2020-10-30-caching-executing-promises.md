@@ -7,18 +7,17 @@ tags: [blog, javascript, typescript, async, promise, lock, node, nodejs]
 # {{ page.title }}
 
 In this post I will show you how to cache executing promises.
-Caching of executing promises, rather than just caching the result of a promise, is useful when the promise is expensive, takes a while to finish and is invoked often.
-The caching will be achieved by using locks, and the locks will be implemented using promises, and relying on properties of JavaScript's event loop.
+Caching an executing promise, rather than just caching the result of the promise, is useful when the underlying asynchronous action is expensive, takes a while to finish and is invoked often.
+The caching will be achieved by using locks implemented using promises, and relying on the properties of the event loop.
 
 ## The Problem
-Assume we have a function `expensiveOperation` which performs a myriad of async actions and takes at least a minute to return.
+Assume we have an asynchronous function `expensiveOperation` which performs a myriad of async actions and takes at least a minute to resolve.
 Then we have a function `cacheExpensiveOperation` which calls `expensiveOperation`, caches its result and returns the cached result on its subsequent calls. As in the following code snippet:
 
 <label for="mn-definition-improvements" class="margin-toggle">&#8853;</label>
 <input type="checkbox" id="mn-definition-improvements" class="margin-toggle"/>
 <span class="marginnote">
-  Implementation note.
-  Using null to figure out if the expensive operation ran is dangerous if the result of the cached operation can be null.
+  Using null to figure out if we have the result is dangerous, if the expensive operation can itself return null.
   It would be safer to e.g. create a Symbol representing a value of the (local) bottom type.
   I am not using this approach to simplify the example. 
 </span>
@@ -39,7 +38,8 @@ const cacheExpensiveOperation = async () => {
 ```
 
 Although `cacheExpensiveOperation` caches the result of `expensiveOperation`, the cache mechanism won't be employed till after `cacheExpensiveOperation` returns for the first time.
-So if we trigger `cacheExpensiveOperation` multiple times at once and do not wait for the result, we trigger `expensiveOperation` multiple times as well. As in the following snippet:
+If we trigger `cacheExpensiveOperation` multiple times at once and do not wait for the result, we trigger `expensiveOperation` multiple times as well.
+As in the following snippet:
 
 <label for="mn-definitionImprovements" class="margin-toggle">&#8853;</label>
 <input type="checkbox" id="mn-definitionImprovements" class="margin-toggle"/>
@@ -55,7 +55,7 @@ const [value1, value2] = await Promise.all([
 ])
 ```
 
-The cache would only get employed if we call `cacheExpensiveOperation` multiple times as in here:
+The cache is employed only if we call `cacheExpensiveOperation` multiple times, as in the following example:
 ```typescript
 // calls expensiveOperation only once
 const value1 = await cacheExpensiveOperation();
@@ -67,28 +67,38 @@ We want `cacheExpensiveOperation` to call `expensiveOperation` at most once, eve
 
 ## Using Locks
 
-[Locks](https://en.wikipedia.org/wiki/Lock_(computer_science)) are a fairly standard way of enforcing certain limits on accessing a shared resource (the `expensiveOperation`).
+[Locks](https://en.wikipedia.org/wiki/Lock_(computer_science)) are a fairly standard mechanism used to enforce certain limits on accessing a shared resource (the `expensiveOperation`).
 To cut down on the length of this article, I am going to assume that you are familiar with locks and their uses.
-Hence, I can now show you how to implement a lock using promises, and properties of the JavaScript event loop.
 
 ### High-level Solution
-Conceptually, we want to change execution `cacheExpensiveOperation` from:
-1. Return a cached result if it exists
-1. Otherwise, run `expensiveOperation` and save its result
+Conceptually, we want to change `cacheExpensiveOperation` from:
+1. Return a cached result if it exists.
+1. Otherwise, run `expensiveOperation` and save its result.
  
 To:
-1. Return a cached result if it exists
+1. Return a cached result if it exists.
 1. If there is a lock, asynchronously wait till it is unlocked/removed.
 1. Otherwise, create a lock, run `expensiveOperation`, save its result and remove the lock.
 
 However, with JavaScript & promises, we can be less explicit.
-As JavaScript is single-threaded in its synchronous code, we can achieve behaviour similar to locks just using promises.
+As JavaScript is single-threaded in its synchronous code, we can achieve behaviour similar to using a lock by using promises.
 
 ### Implementing a Promise-based Lock
-As suggested in the previous section, if we can store a call to `expensiveOperation` in a promise, concurrent calls to `cacheExpensiveOperation` can use the same promise to return the value.
-And storing a call `expensiveOperation` just means assigning a promise to a variable without waiting for the result.
+As suggested in the previous section, we are going to use promises to simulate using a lock.
+Importantly, a promise is an object that we can pass around as we would any other value.
+This allows us to use the same caching mechanism as we use for caching a result of an asynchronous operation.
+
+On the first call to `cacheExpensiveOperation`, we store the promise returned by `expensiveOperation` in a variable.
+Any subsequent calls to `cacheExpensiveOperation` can check if the promise has resolved yet, and if it has not, we work with the existing promise instead of constructing a new one.
 Lo and behold:
 
+<label for="mn-storePromise" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-storePromise" class="margin-toggle"/>
+<span class="marginnote">
+  As noted by [@stekycz](https://twitter.com/stekycz), we can also only store the promise and achieve the same caching effect.
+  That is true, and I am not sure which approach is better.
+  I prefer removing the promise, so it can be removed from the memory, but if the footprint of a promise is small, the two approaches are virtually the same.
+</span>
 ```typescript
 let expensiveOperationPromise = null
 let expensiveOperationResult = null
@@ -122,15 +132,15 @@ The caching mechanism for the promise itself relies on how the event loop works:
 </span>
 1. Since JavaScript is single-threaded in its synchronous code, there cannot be multiple "first calls" to a function. Thus, there will always be a single first call to `cacheExpensiveOperation` that will block till its first asynchronous operation (simplified: till its first `await`).
 
-1. The first call to `cacheExpensiveOperation()` creates a promise which:
-   1. Calls `expensiveOperation`.
-   1. Stores the promise in `expensiveOperationPromise` variable.
-   1. Is "suspended" till the `expensiveOperationPromise` resolves to a value, as it calls `await` on that promise.
+1. The first call to `cacheExpensiveOperation`:
+   1. Calls `expensiveOperation`, and stores the returned promise in the `expensiveOperationPromise` variable.
+   1. It is "suspended" till the `expensiveOperationPromise` resolves to a value, as it calls `await` on that promise.
    
 1. If, in the meantime, we trigger `cacheExpensiveOperation` again, `expensiveOperationPromise` contains a value and thus the call will `await` on the existing promise and won't resolve till the underlying promise resolves (or rejects).
+   Without having to call `expensiveOperation` again.
 
-1. The first (and only) call to `expensiveOperation` resolves:
-   1. All promises waiting for this promise to resolve can now continue execution, using the result.
+1. Once the first call to `expensiveOperation` resolves:
+   1. All promises, which are waiting for this promise to resolve, can now continue execution, using the result.
    1. The first call to `cacheExpensiveOperation` stores this result in `expensiveOperationResult`.
    
 1. Any consequent calls to `cacheExpensiveOperation` use `expensiveOperationResult` to return the cached value.
