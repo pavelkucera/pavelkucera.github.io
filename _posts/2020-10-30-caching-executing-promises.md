@@ -120,7 +120,7 @@ The caching mechanism for the promise itself relies on how the event loop works:
   Please do let me know how to fix it.
   I also do some very hand-wavy explanations, which are trying to shorten the explanation.
 </span>
-1. Since JavaScript is single-threaded in its synchronous code, there cannot be multiple "first calls" to a function. Thus, there will always be a single first call to `cacheExpensiveOperation` that will block till its first `await`.
+1. Since JavaScript is single-threaded in its synchronous code, there cannot be multiple "first calls" to a function. Thus, there will always be a single first call to `cacheExpensiveOperation` that will block till its first asynchronous operation (simplified: till its first `await`).
 
 1. The first call to `cacheExpensiveOperation()` creates a promise which:
    1. Calls `expensiveOperation`.
