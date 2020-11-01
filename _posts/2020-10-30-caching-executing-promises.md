@@ -22,7 +22,6 @@ Then we have a function `cacheExpensiveOperation` which calls `expensiveOperatio
   It would be safer to e.g. create a Symbol representing a value of the (local) bottom type.
   I am not using this approach to simplify the example. 
 </span>
-
 ```typescript
 const expensiveOperation = async (): Promise<number> => {
   // ...
@@ -42,13 +41,12 @@ const cacheExpensiveOperation = async () => {
 Although `cacheExpensiveOperation` caches the result of `expensiveOperation`, the cache mechanism won't be employed till after `cacheExpensiveOperation` returns for the first time.
 So if we trigger `cacheExpensiveOperation` multiple times at once and do not wait for the result, we trigger `expensiveOperation` multiple times as well. As in the following snippet:
 
-<label for="mn-definition-improvements" class="margin-toggle">&#8853;</label>
-<input type="checkbox" id="mn-definition-improvements" class="margin-toggle"/>
+<label for="mn-definitionImprovements" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-definitionImprovements" class="margin-toggle"/>
 <span class="marginnote">
   In the _real world_, this would happen if the cache operation is e.g. triggered on a webpage with tons of traffic.
   First _X_ visitors, who enter the webpage when the cache is empty, trigger the expensive operation _X_ times.
 </span>
-
 ```typescript
 // calls expensiveOperation twice
 const [value1, value2] = await Promise.all([
@@ -114,14 +112,14 @@ const cacheExpensiveOperation = async () => {
 Let's go through how this works.
 The caching mechanism used for the result of `expensiveOperation` has not changed---if we have cached a result, we return it without any waiting.
 
-<label for="mn-definition-improvements" class="margin-toggle">&#8853;</label>
-<input type="checkbox" id="mn-definition-improvements" class="margin-toggle"/>
+The caching mechanism for the promise itself relies on how the event loop works:
+<label for="mn-terminology" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="mn-terminology" class="margin-toggle"/>
 <span class="marginnote">
   I am likely not using the best terminology here.
   Please do let me know how to fix it.
   I also do some very hand-wavy explanations, which are trying to shorten the explanation.
 </span>
-The caching mechanism for the promise itself relies on how the event loop works:
 1. Since JavaScript is single-threaded in its synchronous code, there cannot be multiple "first calls" to a function. Thus, there will always be a single first call to `cacheExpensiveOperation` that will block till its first `await`.
 
 1. The first call to `cacheExpensiveOperation()` creates a promise which:
