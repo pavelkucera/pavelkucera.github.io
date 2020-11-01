@@ -31,7 +31,7 @@ const expensiveOperation = async (): Promise<number> => {
 let expensiveOperationResult = null
 const cacheExpensiveOperation = async () => {
   if (expensiveOperationResult !== null) {
-    return expensiveOperation
+    return expensiveOperationResult
   }
 
   expensiveOperationResult = await expensiveOperation() 
