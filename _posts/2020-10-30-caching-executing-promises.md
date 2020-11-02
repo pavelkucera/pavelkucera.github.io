@@ -1,5 +1,5 @@
 ---
-title: Caching Executing Promises
+title: Caching Executing Promises / Locks with Promises
 layout: post
 tags: [blog, javascript, typescript, async, promise, lock, node, nodejs]
 ---
