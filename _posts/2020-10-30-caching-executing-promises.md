@@ -113,6 +113,7 @@ const cacheExpensiveOperation = async () => {
   }
 
   expensiveOperationPromise = expensiveOperation() // no await here
+    .catch(error => { /* handle as needed, important to prevent floating promises */ })
   expensiveOperationResult = await expensiveOperationPromise
   expensiveOperationPromise = null
   return expensiveOperationResult 
