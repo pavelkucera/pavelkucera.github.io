@@ -46,7 +46,8 @@
 
 <script type="application/javascript">
     const makeEmailReadable = () => {
-        const emailValue = atob('cGF2ZS5rdWNlcmFAZ21haWwuY29t')
+        const emailValueBase64 = 'cGF2ZWwua3VjZXJhQGhleS5jb20K'
+        const emailValue = atob(emailValueBase64)
         const emailElement = document.getElementById('email')
 
         emailElement.setAttribute('href', 'mailto:' + emailValue)

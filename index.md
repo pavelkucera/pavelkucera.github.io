@@ -13,6 +13,6 @@ My all time favourite topics are:
 Find me on
 [Twitter](https://twitter.com/pavelkucera),
 [GitHub](https://github.com/pavelkucera) and
-[LinkedIn](https://www.linkedin.com/in/pavelkucera-91765472).
+[LinkedIn](www.linkedin.com/in/pavelkucera-cph).
 You can get in touch via my email
-[pave (dot) kucera (at) gmail (dot) com](){:id="email"}.
+[pavel (dot) kucera (at) hey (dot) com](){:id="email"}.
