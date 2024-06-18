@@ -1,6 +1,7 @@
 services:
   jekyll:
     image: starefossen/github-pages
+    platform: linux/amd64
     ports:
     - 4000:4000
     volumes:
