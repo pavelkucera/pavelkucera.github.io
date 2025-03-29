@@ -10,7 +10,7 @@
   in {
     devShell.${system} = pkgs.mkShell {
       buildInputs = [
-        (pkgs.ruby.withPackages (ps: with ps; [ jekyll jekyll-github-metadata ]))
+        (pkgs.ruby_3_2.withPackages (ps: with ps; [ jekyll jekyll-github-metadata ]))
       ];
     };
   };
